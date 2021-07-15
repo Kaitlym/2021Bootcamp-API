@@ -393,6 +393,47 @@
                     }
                 }
             }
+        },
+        "/cartitems/total":
+        {
+            "get":
+            {
+                "tags":
+                [
+                    "CartItem"
+                ],
+                "summary": "Return CartItem total cost from database",
+                "description": "Return CartItem total cost from database",
+                "operationId": "CartItem",
+                "responses":
+                {
+                    "200":
+                    {
+                        "description": "successful operation",
+                        "content":
+                        {
+                            "application/json":
+                            {
+                                "schema":
+                                {"type": "number"}
+                                
+                            }
+                        }
+                    },
+                    "400":
+                    {
+                        "description": "Invalid ID supplied"
+                    },
+                    "404":
+                    {
+                        "description": "CartItem total invalid"
+                    },
+                    "500":
+                    {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "components":
@@ -413,7 +454,25 @@
                     {
                         "type": "string"
                     },
+                    "description":
+                    {
+                        "type": "string"
+                    },
+                    "image_url":
+                    {
+                        "type": "string"
+                    },
                     "price":
+                    {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "is_on_sale":
+                    {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "sale_price":
                     {
                         "type": "number",
                         "format": "double"

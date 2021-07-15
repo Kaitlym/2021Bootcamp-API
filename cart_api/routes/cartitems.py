@@ -12,13 +12,22 @@ from cart_api.database import DatabaseCartItem
 class CartItems:
     def on_post(self, req, resp):
         data = req.media
-        new_item = DatabaseCartItem(
-            name=data["name"],
-            price=data['price'],
-            quantity=data['quantity']
-        )
-        new_item.save()
-        resp.media = model_to_dict(new_item)
+        all = DatabaseCartItem.select()
+        dup = False
+        for cartitem in all:
+            if data['name'] == cartitem.name and data['price'] == cartitem.price:
+                dup = True
+        if dup:
+            cartitem.quantity += 1
+            cartitem.save()
+        else:
+            new_item = DatabaseCartItem(
+                name=data['name'],
+                price=data['price'],
+                quantity=data['quantity']
+            )
+            new_item.save()
+            resp.media = model_to_dict(new_item)
         resp.status = falcon.HTTP_201
 
     def on_get(self, req, resp):
@@ -46,3 +55,13 @@ class CartItem:
             item.quantity = req.media['quantity']
             item.save()
         resp.status = falcon.HTTP_204
+
+
+class Total:
+    def on_get(self, req, resp):
+        all = DatabaseCartItem.select()
+        total = 0
+        for cartitem in all:
+            total += cartitem.price * cartitem.quantity
+        resp.media = total
+        resp.status = falcon.HTTP_200
